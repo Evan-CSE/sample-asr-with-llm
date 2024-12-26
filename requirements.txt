@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+google.generativeai
+python-dotenv
+librosa
+openai-whisper
+scipy
+sounddevice
+ipywidgets
+google-generativeai
