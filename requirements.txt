@@ -8,3 +8,6 @@ scipy
 sounddevice
 ipywidgets
 google-generativeai
+redis
+Click
+h11

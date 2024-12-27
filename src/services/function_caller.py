@@ -3,25 +3,18 @@ from datetime import datetime
 import google.generativeai as genai
 from dataclasses import dataclass
 from typing import Dict, Optional
-
-@dataclass
-class UserSession:
-   chat: genai.GenerativeModel.start_chat
-   last_active: datetime
-   prev_message: str = ""
-   awaiting_confirmation: bool = False
+from src.api.dependencies.user_session import UserSession
 
 
 class FunctionCaller:
 
     sessions: Dict[str, UserSession] = {}
     def __init__(self):
-        api_key = os.environ.get('FLASH_API_KEY')
+        api_key = os.getenv('GOOGLE_API_KEY')
         genai.configure(api_key=api_key)
 
         FunctionCaller.model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                               tools=[self.assign_ticket_for_device_request,  self.apply_for_leave, self.get_todays_date])
-
 
 
     def assign_ticket_for_device_request(self, project_name: str, amount: float, reason: str) -> bool:
@@ -37,6 +30,7 @@ class FunctionCaller:
         """
         print(f"{project_name} || {amount} || {reason}")
         return True
+
 
     @staticmethod
     def get_session(user_id: str) -> Optional[UserSession]:
@@ -77,8 +71,6 @@ class FunctionCaller:
 
        else:
            response = session.chat.send_message(f"You are a customer care agent. You can call different function based on user query.Confirm your detected params from user. For missing params let the user know about missing information. User Prompt: {prompt}")
-        #    if response.candidates[0].content.function_call:
-        #        session.params = response.candidates[0].content.function_call
            session.awaiting_confirmation = True
            session.prev_message = prompt
 
