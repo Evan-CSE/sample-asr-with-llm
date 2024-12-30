@@ -11,3 +11,5 @@ google-generativeai
 redis
 Click
 h11
+pydantic
+pydantic_settings
